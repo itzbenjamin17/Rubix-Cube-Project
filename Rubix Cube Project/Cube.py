@@ -3,7 +3,7 @@ from math import sin, cos, degrees
 from Corner import Corner
 from Edge import Edge
 from Centre import Centre
-import time
+from time import sleep
 FACE_COLOURS = {
     'U': (1, 1, 1),  # White
     'D': (1, 1, 0),  # Yellow
@@ -72,7 +72,7 @@ class Cube:
         '''Render the entire cube/rendering each cubie'''
         for cubie in self.cubeDict.values():
             cubie.createCubie()
-
+    '''
     def getEdgePermutations(self):
         permutations = []
         for x in range(self.typeOfCube):
@@ -123,8 +123,7 @@ class Cube:
         for cubie in oldPoints.values():
             if isinstance(cubie,Corner):
                 cubie.setOrientation()
-
-
+    '''
 
     def rotateFace(self, layer: int, axis: str, angle: float):
         if axis == "x":
@@ -171,10 +170,12 @@ class Cube:
             newY = round(newPoint[1] + self.offset)
             newZ = round(newPoint[2] + self.offset)
 
+            
             cubie.updateCoordinates(newX - self.offset ,newY - self.offset ,newZ - self.offset)
+            cubie.rotateVertices(rotationMatrix)
             self.cubeDict[(newX,newY,newZ)] = cubie
 
-            cubie.rotateFaces(axis,angle)
+            #cubie.rotateFaces(axis,angle)
         '''    
         if axis == "z":
             self.changeCornerOrientations(oldPoints)   
@@ -183,7 +184,7 @@ class Cube:
         print("                    corner                                    edge")
         print(f"permutation {self.getCornerPermutations()}        {self.getEdgePermutations()} ")
         print(f"orientation {self.getCornerOrientations()}        {self.getEdgeOrientations()} ")
-       '''
+       
 
 #faceNames = {"B" : 0, "L" : 1, "F" : 2 , "R" : 3, "U" : 4, "D" : 5}
     def isSolved(self):
@@ -201,7 +202,7 @@ class Cube:
             if z == 2 and cube.faces[2].colour != (1,0.65,0):
                 return False
         return True
-      
+      '''
 
     def leftMove(self,angle: float):
         self.rotateFace(0,"x",angle)
@@ -213,7 +214,8 @@ class Cube:
         self.rotateFace(0,"y",angle)
 
     def rightMove(self, angle: float):
-        self.rotateFace(2,"x",angle)
+        self.rotateFace(2,"x",angle/2)
+            
         
     def backMove(self, angle: float):
         self.rotateFace(0,"z",angle)

@@ -88,7 +88,9 @@ class Cubie:
                 faces[i] = Face((0, 0, 0),faceOrder[i])  # Default colour if not specified
         return faces
 
-
+    '''
+    
+    
     def rotateFaces(self, axis: str, angle: float):
         #Some axes dont work how i would imagine so face mappings have to be swapped
         newFaces = {}
@@ -130,7 +132,7 @@ class Cubie:
                     else:
                         newFaces[i] = self.faces[i]
         return newFaces
-    
+    '''
     def createCubie(self):
         #open gl syntax to create a single cube
         glBegin(GL_QUADS)
@@ -144,6 +146,6 @@ class Cubie:
         self.x = x
         self.y = y
         self.z = z
-        self.vertices = self.setVertices()
+        #self.vertices = self.setVertices()
 
         
