@@ -4,6 +4,8 @@ from Corner import Corner
 from Edge import Edge
 from Centre import Centre
 from time import sleep
+from OpenGL.GL import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
+import pygame
 FACE_COLOURS = {
     'U': (1, 1, 1),  # White
     'D': (1, 1, 0),  # Yellow
@@ -214,7 +216,12 @@ class Cube:
         self.rotateFace(0,"y",angle)
 
     def rightMove(self, angle: float):
-        self.rotateFace(2,"x",angle/2)
+        for i in range(9):
+            self.rotateFace(2,"x",angle/9)
+            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+            self.render()
+            pygame.display.flip()
+            sleep(0.005)
             
         
     def backMove(self, angle: float):
