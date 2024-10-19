@@ -11,7 +11,7 @@ CLOCKWISE_TURN_ANGLE = pi/2
 ANTICLOCKWISE_TURN_ANGLE = -pi/2
 
 def main():
-    #Setting up the pygame and OpenGL environment
+    # Setting up the pygame and OpenGL environment
     pygame.init()
     display = (800,600)
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
@@ -19,11 +19,11 @@ def main():
     gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
     glTranslatef(0,-5, -30)
 
-    #creating a 3x3x3 cube
+    # Creating a 3x3x3 cube
     EntireCube = Cube(3) 
     EntireCube.createEntireCube()
 
-    #Booleans for each type of rotation that may occur
+    # Booleans for each type of rotation that may occur
     rotateUpKey, rotateDownKey, rotateLeftKey, rotateRightKey = False, False, False, False
     rotationalSensitivity = 2
     input = ""
@@ -32,14 +32,13 @@ def main():
         if inputChanged:
             print(input)
             inputChanged = False
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                #input.rstrip()
-                #print(input)
                 quit()
 
-            #Determining which key is pressed and which action needs to be taken
+            # Determining which key is pressed and which action needs to be taken
             if event.type == KEYDOWN:
                 if event.key == K_UP:
                     rotateUpKey = True
@@ -111,32 +110,8 @@ def main():
                         EntireCube.leftMove(CLOCKWISE_TURN_ANGLE)                    
                         input += "L "
                     inputChanged = True
-                    '''
-                if event.key == K_m:
-                    if pygame.key.get_mods() & KMOD_SHIFT:
-                        EntireCube.middleMove(ANTICLOCKWISE_TURN_ANGLE)
-                        input += "M' "
-                    else:
-                        EntireCube.middleMove(CLOCKWISE_TURN_ANGLE)
-                        input += "M "
-                    inputChanged = True
-                if event.key == K_s:
-                    if pygame.key.get_mods() & KMOD_SHIFT:
-                        EntireCube.sliceSMove(CLOCKWISE_TURN_ANGLE)
-                        input += "S' "
-                    else:
-                        EntireCube.sliceSMove(ANTICLOCKWISE_TURN_ANGLE)                
-                        input += "S "
-                    inputChanged = True
-                if event.key == K_e:
-                    if pygame.key.get_mods() & KMOD_SHIFT:
-                        EntireCube.sliceEMove(ANTICLOCKWISE_TURN_ANGLE)
-                        input += "E' "
-                    else:
-                        EntireCube.sliceEMove(CLOCKWISE_TURN_ANGLE)
-                        input += "E "
-                    inputChanged = True
-                    '''
+
+        # Logic for rotating the entire cube for the user to get a different view, not the faces
         if rotateUpKey:
             glRotatef(rotationalSensitivity,-rotationalSensitivity,0,0)
         if rotateDownKey:
@@ -148,7 +123,7 @@ def main():
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
-        #Rendering cube on every frame to show changes
+        # Rendering cube on every frame to show changes
         EntireCube.render()
         pygame.display.flip()
         pygame.time.wait(10)

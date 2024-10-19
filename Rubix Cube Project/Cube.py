@@ -1,11 +1,15 @@
 import numpy as np
-from math import sin, cos, degrees
+from math import sin, cos
 from Corner import Corner
 from Edge import Edge
 from Centre import Centre
 from time import sleep
 from OpenGL.GL import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 import pygame
+
+ANIMATION_DIVISION = 9
+TIME_WAIT = 0.005
+
 FACE_COLOURS = {
     'U': (1, 1, 1),  # White
     'D': (1, 1, 0),  # Yellow
@@ -74,58 +78,6 @@ class Cube:
         '''Render the entire cube/rendering each cubie'''
         for cubie in self.cubeDict.values():
             cubie.createCubie()
-    '''
-    def getEdgePermutations(self):
-        permutations = []
-        for x in range(self.typeOfCube):
-            for y in range(self.typeOfCube):
-                for z in range(self.typeOfCube):
-                    if (x,y,z) != (1,1,1):
-                        if isinstance(self.cubeDict[(x,y,z)],Edge):
-                            permutations.append(self.cubeDict[(x,y,z)].permutation)
-        return permutations
-             
-    def getCornerPermutations(self):
-        permutations = []
-        for x in range(self.typeOfCube):
-            for y in range(self.typeOfCube):
-                for z in range(self.typeOfCube):
-                    if (x,y,z) != (1,1,1):
-                        if isinstance(self.cubeDict[(x,y,z)],Corner):
-                            permutations.append(self.cubeDict[(x,y,z)].permutation)
-        return permutations
-    
-    def getCornerOrientations(self):
-        orientations = []
-        for x in range(self.typeOfCube):
-            for y in range(self.typeOfCube):
-                for z in range(self.typeOfCube):
-                    if (x,y,z) != (1,1,1):
-                        if isinstance(self.cubeDict[(x,y,z)],Corner):
-                            orientations.append(self.cubeDict[(x,y,z)].orientation)
-        return orientations
-    
-    def getEdgeOrientations(self):
-        orientations = []
-        for x in range(self.typeOfCube):
-            for y in range(self.typeOfCube):
-                for z in range(self.typeOfCube):
-                    if (x,y,z) != (1,1,1):
-                        if isinstance(self.cubeDict[(x,y,z)],Edge):
-                            orientations.append(self.cubeDict[(x,y,z)].orientation)
-        return orientations
-    
-    
-    def changeEdgeOrientations(self,oldPoints):
-        for cubie in oldPoints.values():
-            if isinstance(cubie,Edge):
-                cubie.flipOrientation()
-        
-    def changeCornerOrientations(self, oldPoints):
-        for cubie in oldPoints.values():
-            if isinstance(cubie,Corner):
-                cubie.setOrientation()
-    '''
 
     def rotateFace(self, layer: int, axis: str, angle: float):
         if axis == "x":
@@ -134,33 +86,27 @@ class Cube:
             dimension = 1
         else:
             dimension = 2
-        
-        oldPoints = {pos: cubie for pos, cubie in self.cubeDict.items() if pos[dimension] == layer}
-
+        # Finding all the cubies that are going to be rotated
+        oldPoints = {pos: cubie for pos, cubie in self.cubeDict.items() if round(pos[dimension]) == layer}
 
         for point in oldPoints.keys():
             if point in self.cubeDict:
                 del self.cubeDict[point]
-
-        xRotationMatrix = np.array([
+                             
+        if axis == "x":
+            rotationMatrix = np.array([
                 [1, 0, 0],
                 [0, cos(angle), -sin(angle)],
                 [0, sin(angle), cos(angle)]])
-          
-        yRotationMatrix = np.array([[cos(angle), 0, sin(angle)],
+            
+        elif axis == "y":
+            rotationMatrix = np.array([[cos(angle), 0, sin(angle)],
                 [0, 1, 0],
                 [-sin(angle), 0, cos(angle)]])
-            
-        zRotationMatrix = np.array([[cos(angle), -sin(angle), 0],
+        else:
+            rotationMatrix = np.array([[cos(angle), -sin(angle), 0],
                 [sin(angle), cos(angle), 0],
                 [0, 0, 1]])
-            
-        if axis == "x":
-            rotationMatrix = xRotationMatrix
-        elif axis == "y":
-            rotationMatrix = yRotationMatrix
-        else:
-            rotationMatrix = zRotationMatrix
 
         for (x,y,z), cubie in oldPoints.items():
             x -= self.offset
@@ -168,73 +114,65 @@ class Cube:
             z -= self.offset
             newPoint = np.dot(rotationMatrix,np.array((x,y,z)))
 
-            newX = round(newPoint[0] + self.offset)
-            newY = round(newPoint[1] + self.offset)
-            newZ = round(newPoint[2] + self.offset)
+            newX = (newPoint[0] + self.offset)
+            newY = (newPoint[1] + self.offset)
+            newZ = (newPoint[2] + self.offset)
 
             
             cubie.updateCoordinates(newX - self.offset ,newY - self.offset ,newZ - self.offset)
             cubie.rotateVertices(rotationMatrix)
             self.cubeDict[(newX,newY,newZ)] = cubie
 
-            #cubie.rotateFaces(axis,angle)
-        '''    
-        if axis == "z":
-            self.changeCornerOrientations(oldPoints)   
-        elif axis == "y":
-            self.changeEdgeOrientations(oldPoints) 
-        print("                    corner                                    edge")
-        print(f"permutation {self.getCornerPermutations()}        {self.getEdgePermutations()} ")
-        print(f"orientation {self.getCornerOrientations()}        {self.getEdgeOrientations()} ")
-       
-
-#faceNames = {"B" : 0, "L" : 1, "F" : 2 , "R" : 3, "U" : 4, "D" : 5}
-    def isSolved(self):
-        for (x,y,z),cube in self.cubeDict.items():
-            if x == 0 and cube.faces[1].colour != (0,0,1):
-                return False                     # R,G,B
-            if x == 2 and cube.faces[3].colour != (0,1,0):
-                return False
-            if y == 2 and cube.faces[4].colour != (1,1,1):
-                return False
-            if y == 0 and cube.faces[5].colour != (1,1,0):
-                return False
-            if z == 0 and cube.faces[0].colour != (1,0,0):
-                return False
-            if z == 2 and cube.faces[2].colour != (1,0.65,0):
-                return False
-        return True
-      '''
-
     def leftMove(self,angle: float):
-        self.rotateFace(0,"x",angle)
-
-    def upMove(self, angle: float):
-        self.rotateFace(2,"y",angle)
-
-    def downMove(self, angle: float):
-        self.rotateFace(0,"y",angle)
-
-    def rightMove(self, angle: float):
-        for i in range(9):
-            self.rotateFace(2,"x",angle/9)
-            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+        #self.rotateFace(0,"x",angle)
+        for _ in range(ANIMATION_DIVISION):
+            self.rotateFace(0,"x",angle/ANIMATION_DIVISION)
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
-            sleep(0.005)
-            
-        
+            sleep(TIME_WAIT)
+
+    def rightMove(self, angle: float):
+        #self.rotateFace(2,"x",angle)
+        for _ in range(ANIMATION_DIVISION):
+            self.rotateFace(2,"x",angle/ANIMATION_DIVISION)
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+            self.render()
+            pygame.display.flip()
+            sleep(TIME_WAIT)
+
+    def upMove(self, angle: float):
+        #self.rotateFace(2,"y",angle)
+        for _ in range(ANIMATION_DIVISION):
+            self.rotateFace(2,"y",angle/ANIMATION_DIVISION)
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+            self.render()
+            pygame.display.flip()
+            sleep(TIME_WAIT)
+
+    def downMove(self, angle: float):
+        #self.rotateFace(0,"y",angle)
+        for _ in range(ANIMATION_DIVISION):
+            self.rotateFace(0,"y",angle/ANIMATION_DIVISION)
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+            self.render()
+            pygame.display.flip()
+            sleep(TIME_WAIT)
+         
     def backMove(self, angle: float):
-        self.rotateFace(0,"z",angle)
+        #self.rotateFace(0,"z",angle)
+        for _ in range(ANIMATION_DIVISION):
+            self.rotateFace(0,"z",angle/ANIMATION_DIVISION)
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+            self.render()
+            pygame.display.flip()
+            sleep(TIME_WAIT)
 
     def frontMove(self,angle: float):
-        self.rotateFace(2,"z",angle)
-
-    def middleMove(self,angle: float):
-        self.rotateFace(1,"x",angle)
-
-    def sliceSMove(self, angle: float):
-        self.rotateFace(1,"z",angle)
-    
-    def sliceEMove(self,angle: float):
-        self.rotateFace(1,"y",angle)
+        #self.rotateFace(2,"z",angle)
+        for _ in range(ANIMATION_DIVISION):
+            self.rotateFace(2,"z",angle/ANIMATION_DIVISION)
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+            self.render()
+            pygame.display.flip()
+            sleep(TIME_WAIT)
