@@ -112,12 +112,12 @@ class Cube:
             x -= self.offset
             y -= self.offset
             z -= self.offset
+            
             newPoint = np.dot(rotationMatrix,np.array((x,y,z)))
 
             newX = (newPoint[0] + self.offset)
             newY = (newPoint[1] + self.offset)
             newZ = (newPoint[2] + self.offset)
-
             
             cubie.updateCoordinates(newX - self.offset ,newY - self.offset ,newZ - self.offset)
             cubie.rotateVertices(rotationMatrix)
