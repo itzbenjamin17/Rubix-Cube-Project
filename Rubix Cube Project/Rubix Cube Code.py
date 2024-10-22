@@ -65,6 +65,9 @@ def main():
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.upMove(CLOCKWISE_TURN_ANGLE)
                         input += "U' "
+                    elif pygame.key.get_pressed()[pygame.K_2]:
+                        EntireCube.upMove(CLOCKWISE_TURN_ANGLE * 2)
+                        input += "U2 "
                     else:
                         EntireCube.upMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "U "

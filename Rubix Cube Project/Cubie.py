@@ -57,7 +57,8 @@ class Cubie:
         self.y = y
         self.z = z
         self.vertices = self.setVertices()
-        self.faces = self.assignFaces(colours)
+        self.faceDict = self.assignFaces(colours)
+        self.faces = self.faceDict
 
     def setVertices(self):
         '''Set predefined vertices based on cubie's position'''
@@ -91,7 +92,6 @@ class Cubie:
     def rotateFaces(self, axis: str, angle: float):
         #Some axes dont work how i would imagine so face mappings have to be swapped
         newFaces = {}
-
         if axis == "x":
             if angle > 0:
                faceMapping = {"U": "F", "F": "D", "D": "B","B":"U"}
@@ -129,15 +129,16 @@ class Cubie:
                     else:
                         newFaces[i] = self.faces[i]
         return newFaces
-    
+
     def createCubie(self):
         # Open gl syntax to create a single cube
         glBegin(GL_QUADS)
         for i, surface in enumerate(surfaces):
-            glColor3fv(self.faces[i].getColour())
+            glColor3fv(self.faceDict[i].getColour())
             for vertex in surface:
                 glVertex3fv(self.vertices[vertex])
         glEnd()
+    
     
     def updateCoordinates(self, x: int, y: int, z: int):
         self.x = x

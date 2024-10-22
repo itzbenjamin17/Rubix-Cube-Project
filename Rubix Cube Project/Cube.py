@@ -89,6 +89,12 @@ class Cube:
         # Finding all the cubies that are going to be rotated
         oldPoints = {pos: cubie for pos, cubie in self.cubeDict.items() if round(pos[dimension]) == layer}
 
+        if axis == "y":
+            for cubie in oldPoints.items():
+                if type(cubie) is Edge:
+                    cubie.flipOrientation()
+        
+
         for point in oldPoints.keys():
             if point in self.cubeDict:
                 del self.cubeDict[point]
@@ -122,6 +128,7 @@ class Cube:
             cubie.updateCoordinates(newX - self.offset ,newY - self.offset ,newZ - self.offset)
             cubie.rotateVertices(rotationMatrix)
             self.cubeDict[(newX,newY,newZ)] = cubie
+            cubie.rotateFaces(axis,angle)
 
     def leftMove(self,angle: float):
         #self.rotateFace(0,"x",angle)
