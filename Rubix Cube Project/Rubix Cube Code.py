@@ -66,7 +66,8 @@ def main():
                         EntireCube.upMove(CLOCKWISE_TURN_ANGLE)
                         input += "U' "
                     elif pygame.key.get_pressed()[pygame.K_2]:
-                        EntireCube.upMove(CLOCKWISE_TURN_ANGLE * 2)
+                        EntireCube.upMove(CLOCKWISE_TURN_ANGLE)
+                        EntireCube.upMove(CLOCKWISE_TURN_ANGLE)
                         input += "U2 "
                     else:
                         EntireCube.upMove(ANTICLOCKWISE_TURN_ANGLE)
@@ -77,6 +78,10 @@ def main():
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.downMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "D' "
+                    elif pygame.key.get_pressed()[pygame.K_2]:
+                        EntireCube.downMove(CLOCKWISE_TURN_ANGLE)
+                        EntireCube.downMove(CLOCKWISE_TURN_ANGLE)
+                        input += "D2 "
                     else:
                         EntireCube.downMove(CLOCKWISE_TURN_ANGLE)   
                         input += "D "
@@ -85,6 +90,10 @@ def main():
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.frontMove(CLOCKWISE_TURN_ANGLE)
                         input += "F' "
+                    elif pygame.key.get_pressed()[pygame.K_2]:
+                        EntireCube.frontMove(CLOCKWISE_TURN_ANGLE)
+                        EntireCube.frontMove(CLOCKWISE_TURN_ANGLE)
+                        input += "F2 "
                     else:
                         EntireCube.frontMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "F "
@@ -93,6 +102,10 @@ def main():
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.backMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "B' "
+                    elif pygame.key.get_pressed()[pygame.K_2]:
+                        EntireCube.backMove(CLOCKWISE_TURN_ANGLE)
+                        EntireCube.backMove(CLOCKWISE_TURN_ANGLE)
+                        input += "B2 "
                     else:
                         EntireCube.backMove(CLOCKWISE_TURN_ANGLE) 
                         input += "B "
@@ -101,6 +114,10 @@ def main():
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.rightMove(CLOCKWISE_TURN_ANGLE)
                         input += "R' "
+                    elif pygame.key.get_pressed()[pygame.K_2]:
+                        EntireCube.rightMove(CLOCKWISE_TURN_ANGLE)
+                        EntireCube.rightMove(CLOCKWISE_TURN_ANGLE)
+                        input += "R2 "
                     else:
                         EntireCube.rightMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "R "
@@ -109,6 +126,10 @@ def main():
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.leftMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "L' "
+                    elif pygame.key.get_pressed()[pygame.K_2]:
+                        EntireCube.leftMove(CLOCKWISE_TURN_ANGLE)
+                        EntireCube.leftMove(CLOCKWISE_TURN_ANGLE)
+                        input += "L2 "
                     else:
                         EntireCube.leftMove(CLOCKWISE_TURN_ANGLE)                    
                         input += "L "

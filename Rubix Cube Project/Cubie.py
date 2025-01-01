@@ -57,7 +57,9 @@ class Cubie:
         self.y = y
         self.z = z
         self.vertices = self.setVertices()
+        # The original colours of the cubie, used for drawing the cubie
         self.faceDict = self.assignFaces(colours)
+        # The current colours on each of the faces, used for solving the cubie
         self.faces = self.faceDict
 
     def setVertices(self):

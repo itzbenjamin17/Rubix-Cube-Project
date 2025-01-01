@@ -7,6 +7,7 @@ from time import sleep
 from OpenGL.GL import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 import pygame
 
+
 ANIMATION_DIVISION = 9
 TIME_WAIT = 0.005
 
@@ -79,6 +80,53 @@ class Cube:
         for cubie in self.cubeDict.values():
             cubie.createCubie()
 
+    def getEdgeOrientation(self):
+        orientations = []
+        print("Edge orientation")
+        for edge in self.edges:
+            orientations.append(f"{round(edge.x),round(edge.y),round(edge.z)}:{edge.orientation}")
+        return orientations
+
+    def getCornerOrientation(self):
+        orientations = []
+        print("Corner orientation")
+        for corner in self.corners:
+            orientations.append(f"{round(corner.x),round(corner.y),round(corner.z)}:{corner.orientation}")
+        return orientations
+    def findKey(self,targetKey):
+        for key in self.cubeDict.keys():
+            roundedKey = tuple(round(coord,0) for coord in key)
+            if roundedKey == targetKey:
+                return key
+            
+    def getEdgePerumation(self):
+        permutations = []
+        print("Edge permutation")
+        for x in range(self.typeOfCube):
+            for y in range(self.typeOfCube):
+                for z in range(self.typeOfCube):
+                    targetCubie = self.cubeDict[self.findKey((x,y,z))]
+                    if type(targetCubie) is Edge:
+                        permutations.append(f"{round(targetCubie.x),round(targetCubie.y),round(targetCubie.z)}:{targetCubie.permutation}")
+        '''
+        for edge in self.edges:
+                permutations.append(f"{round(edge.x),round(edge.y),round(edge.z)}:{edge.permutation}")
+        return permutations
+        '''
+    def getCornerPerumation(self):
+        permutations = []
+        print("Corner permutation")
+        for x in range(self.typeOfCube):
+            for y in range(self.typeOfCube):
+                for z in range(self.typeOfCube):
+                    targetCubie = self.cubeDict[self.findKey((x,y,z))]
+                    if type(targetCubie) is Corner:
+                        permutations.append(f"{round(targetCubie.x),round(targetCubie.y),round(targetCubie.z)}:{targetCubie.permutation}")
+        '''
+        for corner in self.corners:
+                permutations.append(f"{round(corner.x),round(corner.y),round(corner.z)}:{corner.permutation}")
+        return permutations
+    '''
     def rotateFace(self, layer: int, axis: str, angle: float):
         if axis == "x":
             dimension = 0
@@ -87,13 +135,7 @@ class Cube:
         else:
             dimension = 2
         # Finding all the cubies that are going to be rotated
-        oldPoints = {pos: cubie for pos, cubie in self.cubeDict.items() if round(pos[dimension]) == layer}
-
-        if axis == "y":
-            for cubie in oldPoints.items():
-                if type(cubie) is Edge:
-                    cubie.flipOrientation()
-        
+        oldPoints = {pos: cubie for pos, cubie in self.cubeDict.items() if round(pos[dimension]) == layer}    
 
         for point in oldPoints.keys():
             if point in self.cubeDict:
@@ -128,10 +170,9 @@ class Cube:
             cubie.updateCoordinates(newX - self.offset ,newY - self.offset ,newZ - self.offset)
             cubie.rotateVertices(rotationMatrix)
             self.cubeDict[(newX,newY,newZ)] = cubie
-            cubie.rotateFaces(axis,angle)
+            
 
     def leftMove(self,angle: float):
-        #self.rotateFace(0,"x",angle)
         for _ in range(ANIMATION_DIVISION):
             self.rotateFace(0,"x",angle/ANIMATION_DIVISION)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -139,8 +180,12 @@ class Cube:
             pygame.display.flip()
             sleep(TIME_WAIT)
 
+        for (x,_,_), cubie in self.cubeDict.items():
+          if round(x) == 0:
+              cubie.rotateFaces("x",angle)
+                
+
     def rightMove(self, angle: float):
-        #self.rotateFace(2,"x",angle)
         for _ in range(ANIMATION_DIVISION):
             self.rotateFace(2,"x",angle/ANIMATION_DIVISION)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -148,8 +193,12 @@ class Cube:
             pygame.display.flip()
             sleep(TIME_WAIT)
 
+        for (x,_,_), cubie in self.cubeDict.items():
+          if round(x) == 2:
+              cubie.rotateFaces("x",angle)
+
+
     def upMove(self, angle: float):
-        #self.rotateFace(2,"y",angle)
         for _ in range(ANIMATION_DIVISION):
             self.rotateFace(2,"y",angle/ANIMATION_DIVISION)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -157,17 +206,42 @@ class Cube:
             pygame.display.flip()
             sleep(TIME_WAIT)
 
+        for (_,y,_), cubie in self.cubeDict.items():
+          if round(y) == 2:
+              cubie.rotateFaces("y",angle)
+
+        for cubie in self.edges:
+            if round(cubie.y) + self.offset == 2:
+                cubie.flipOrientation()
+        for cubie in self.corners:
+            if round(cubie.y) + self.offset == 2:
+                cubie.setOrientation()
+
+        #print(self.getCornerOrientation())
+        #print(self.getEdgeOrientation())
+        print(self.getCornerPerumation())
+        print(self.getEdgePerumation())
+
     def downMove(self, angle: float):
-        #self.rotateFace(0,"y",angle)
         for _ in range(ANIMATION_DIVISION):
             self.rotateFace(0,"y",angle/ANIMATION_DIVISION)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
             sleep(TIME_WAIT)
+
+        for (_,y,_), cubie in self.cubeDict.items():
+          if round(y) == 0:
+              cubie.rotateFaces("y",angle)
+
+        for cubie in self.edges:
+            if round(cubie.y) + self.offset == 0:
+                cubie.flipOrientation()
+        for cubie in self.corners:
+            if round(cubie.y) + self.offset == 0:
+                cubie.setOrientation()
          
     def backMove(self, angle: float):
-        #self.rotateFace(0,"z",angle)
         for _ in range(ANIMATION_DIVISION):
             self.rotateFace(0,"z",angle/ANIMATION_DIVISION)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -175,11 +249,18 @@ class Cube:
             pygame.display.flip()
             sleep(TIME_WAIT)
 
+        for (_,_,z), cubie in self.cubeDict.items():
+          if round(z) == 0:
+              cubie.rotateFaces("z",angle)
+
     def frontMove(self,angle: float):
-        #self.rotateFace(2,"z",angle)
         for _ in range(ANIMATION_DIVISION):
             self.rotateFace(2,"z",angle/ANIMATION_DIVISION)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
             sleep(TIME_WAIT)
+
+        for (_,_,z), cubie in self.cubeDict.items():
+          if round(z) == 2:
+              cubie.rotateFaces("z",angle)

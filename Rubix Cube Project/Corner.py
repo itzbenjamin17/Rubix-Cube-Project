@@ -6,16 +6,11 @@ class Corner(Cubie):
         self.orientation = 0
         self.permutation = permutation
 
-    #if either the top or bottom face is either yellow or white its orientated correctly (0)
-    #if either the front face or the back face is either yellow or white its orientated wrong (1)
-    #else its 2 left or right
     def setOrientation(self):
-        Colours = [(1,1,1),(1,1,0)]
-
-        if self.faces[4].getColour() in Colours or self.faces[5].getColour() in Colours:
+        if self.faces[1].colour == (0,0,1) or self.faces[3].colour == (0,0,1) or self.faces[1].colour == (0,1,0) or self.faces[3].colour == (0,1,0):
             self.orientation = 0
-        elif self.faces[0].getColour() in Colours or self.faces[2].getColour() in Colours:
-            self.orientation =  1
+        elif self.faces[1].colour == (1,0,0) or self.faces[3].colour == (1,0,0) or self.faces[1].colour == (1,0.65,0) or self.faces[3].colour == (1,0.65,0):
+            self.orientation = 1
         else:
             self.orientation = 2
         
