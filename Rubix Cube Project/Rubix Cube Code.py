@@ -13,7 +13,44 @@ ANTICLOCKWISE_TURN_ANGLE = -pi/2
 FPS = 60  # Target frames per second
 
 
+def print_keybind_menu():
+    """Prints a formatted menu of keybinds in the console"""
+    print("\n" + "="*50)
+    print("{:^50}".format("RUBIK'S CUBE SIMULATOR - KEYBINDS"))
+    print("="*50)
+
+    # Movement controls
+    print("\n{:^50}".format("CUBE ROTATION"))
+    print("-"*50)
+    print("{:<30} : {}".format("Arrow Up/Down/Left/Right", "Rotate view"))
+
+    # Face rotations
+    print("\n{:^50}".format("FACE ROTATIONS"))
+    print("-"*50)
+    print("{:<30} : {}".format("U / Shift+U",
+          "Up face clockwise / counterclockwise"))
+    print("{:<30} : {}".format("D / Shift+D",
+          "Down face clockwise / counterclockwise"))
+    print("{:<30} : {}".format("F / Shift+F",
+          "Front face clockwise / counterclockwise"))
+    print("{:<30} : {}".format("B / Shift+B",
+          "Back face clockwise / counterclockwise"))
+    print("{:<30} : {}".format("R / Shift+R",
+          "Right face clockwise / counterclockwise"))
+    print("{:<30} : {}".format("L / Shift+L",
+          "Left face clockwise / counterclockwise"))
+
+    # Other controls
+    print("\n{:^50}".format("OTHER CONTROLS"))
+    print("-"*50)
+    print("{:<30} : {}".format("Space", "Print move history"))
+    print("{:<30} : {}".format("`", "Auto-solve cube"))
+
+
 def main():
+    # Print keybind menu in console at startup
+    print_keybind_menu()
+
     # Setting up the pygame and OpenGL environment
     pygame.init()
     display = (800, 600)
@@ -30,15 +67,11 @@ def main():
     rotateUpKey, rotateDownKey, rotateLeftKey, rotateRightKey = False, False, False, False
     rotationalSensitivity = 2
     input = ""
-    inputChanged = False
     isSolving = False
 
     clock = pygame.time.Clock()
 
     while True:
-        if inputChanged:
-            inputChanged = False
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -76,7 +109,6 @@ def main():
                     else:
                         EntireCube.upMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "U "
-                    inputChanged = True
 
                 if event.key == K_d:
                     if pygame.key.get_mods() & KMOD_SHIFT:
@@ -85,7 +117,6 @@ def main():
                     else:
                         EntireCube.downMove(CLOCKWISE_TURN_ANGLE)
                         input += "D "
-                    inputChanged = True
 
                 if event.key == K_f:
                     if pygame.key.get_mods() & KMOD_SHIFT:
@@ -94,7 +125,6 @@ def main():
                     else:
                         EntireCube.frontMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "F "
-                    inputChanged = True
 
                 if event.key == K_b:
                     if pygame.key.get_mods() & KMOD_SHIFT:
@@ -103,7 +133,6 @@ def main():
                     else:
                         EntireCube.backMove(CLOCKWISE_TURN_ANGLE)
                         input += "B "
-                    inputChanged = True
 
                 if event.key == K_r:
                     if pygame.key.get_mods() & KMOD_SHIFT:
@@ -112,7 +141,6 @@ def main():
                     else:
                         EntireCube.rightMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "R "
-                    inputChanged = True
 
                 if event.key == K_l:
                     if pygame.key.get_mods() & KMOD_SHIFT:
@@ -121,7 +149,6 @@ def main():
                     else:
                         EntireCube.leftMove(CLOCKWISE_TURN_ANGLE)
                         input += "L "
-                    inputChanged = True
 
                 if event.key == K_SPACE:
                     print(input)
@@ -133,6 +160,7 @@ def main():
                     print("Executing solution...")
                     Solver.executeSolve(EntireCube, solution)
                     print("Done executing")
+                    input = ""
                     isSolving = False
 
         # Logic for rotating the entire cube for the user to get a different view, not the faces
