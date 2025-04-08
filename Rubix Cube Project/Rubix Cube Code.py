@@ -6,9 +6,11 @@ from OpenGL.GLU import *
 
 from Cube import Cube
 from math import pi
+import Solver
 
 CLOCKWISE_TURN_ANGLE = pi/2
 ANTICLOCKWISE_TURN_ANGLE = -pi/2
+MOVE_DELAY = 50
 
 
 def main():
@@ -29,6 +31,8 @@ def main():
     rotationalSensitivity = 2
     input = ""
     inputChanged = False
+    isSolving = False
+
     while True:
         if inputChanged:
             inputChanged = False
@@ -37,6 +41,9 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
+            if isSolving:
+                continue
 
             # Determining which key is pressed and which action needs to be taken
             if event.type == KEYDOWN:
@@ -77,6 +84,7 @@ def main():
                         EntireCube.downMove(CLOCKWISE_TURN_ANGLE)
                         input += "D "
                     inputChanged = True
+
                 if event.key == K_f:
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.frontMove(CLOCKWISE_TURN_ANGLE)
@@ -85,6 +93,7 @@ def main():
                         EntireCube.frontMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "F "
                     inputChanged = True
+
                 if event.key == K_b:
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.backMove(ANTICLOCKWISE_TURN_ANGLE)
@@ -93,6 +102,7 @@ def main():
                         EntireCube.backMove(CLOCKWISE_TURN_ANGLE)
                         input += "B "
                     inputChanged = True
+
                 if event.key == K_r:
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.rightMove(CLOCKWISE_TURN_ANGLE)
@@ -101,6 +111,7 @@ def main():
                         EntireCube.rightMove(ANTICLOCKWISE_TURN_ANGLE)
                         input += "R "
                     inputChanged = True
+
                 if event.key == K_l:
                     if pygame.key.get_mods() & KMOD_SHIFT:
                         EntireCube.leftMove(ANTICLOCKWISE_TURN_ANGLE)
@@ -112,6 +123,15 @@ def main():
 
                 if event.key == K_SPACE:
                     print(input)
+
+                if event.key == K_BACKQUOTE:
+                    isSolving = True
+                    solution = Solver.solve(EntireCube)
+                    print("Solution:", solution)
+                    print("Executing solution...")
+                    Solver.executeSolve(EntireCube, solution)
+                    print("Done executing")
+                    isSolving = False
 
         # Logic for rotating the entire cube for the user to get a different view, not the faces
         if rotateUpKey:
