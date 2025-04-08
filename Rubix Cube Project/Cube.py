@@ -7,7 +7,7 @@ from OpenGL.GL import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 import pygame
 
 ANIMATION_DIVISION = 9
-FRAME_RATE = 100  # Higher value = faster animation
+FRAME_RATE = 100
 
 FACE_COLOURS = {
     'U': (1, 1, 1),  # White

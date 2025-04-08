@@ -4,7 +4,7 @@ from math import pi
 import pygame
 
 TURN = pi / 2
-MOVE_DELAY = 2  # Frames per second for the solution animation
+FRAME_RATE = 3
 
 
 def getRepresentation(cube: Cube) -> str:
@@ -96,11 +96,10 @@ def executeSolve(cube: Cube, solution: str) -> None:
             elif move_type == 'B':
                 cube.backMove(TURN)
 
-            # Handle events to prevent freezing
+            # Handling events to prevent freezing
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return
 
-            # Control animation speed
-            clock.tick(MOVE_DELAY)
+            clock.tick(FRAME_RATE)
