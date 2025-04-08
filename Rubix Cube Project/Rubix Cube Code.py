@@ -10,7 +10,7 @@ import Solver
 
 CLOCKWISE_TURN_ANGLE = pi/2
 ANTICLOCKWISE_TURN_ANGLE = -pi/2
-MOVE_DELAY = 50
+FPS = 60  # Target frames per second
 
 
 def main():
@@ -32,6 +32,8 @@ def main():
     input = ""
     inputChanged = False
     isSolving = False
+
+    clock = pygame.time.Clock()
 
     while True:
         if inputChanged:
@@ -148,7 +150,7 @@ def main():
         # Rendering cube on every frame to show changes
         EntireCube.render()
         pygame.display.flip()
-        pygame.time.wait(10)
+        clock.tick(FPS)
 
 
 if __name__ == '__main__':

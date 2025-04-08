@@ -136,7 +136,7 @@ class Cubie:
         return newFaces
 
     def createCubie(self):
-        # Open gl syntax to create a single cube
+        '''Open GL syntax to create a single cubie'''
         glBegin(GL_QUADS)
         for i, surface in enumerate(surfaces):
             glColor3fv(self.faces[i].colour)

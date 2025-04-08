@@ -73,21 +73,13 @@ def solve(cube: Cube) -> str:
 
 def executeSolve(cube: Cube, solution: str) -> None:
     '''Executing the solution on the cube.'''
-    # Split the solution into individual moves
+    # Splitting the solution into individual moves
     moves = solution.split()
     clock = pygame.time.Clock()
 
-    # Execute each move on the cube
+    # Executing each move on the cube
     for move in moves:
-        if len(move) > 1 and move[1].isdigit():
-            turns = int(move[1])
-        else:
-            # Handle moves like U' or just U
-            if "'" in move:
-                turns = 3  # 3 clockwise = 1 counterclockwise
-            else:
-                turns = 1
-
+        turns = int(move[1])
         move_type = move[0]
 
         for _ in range(turns):
