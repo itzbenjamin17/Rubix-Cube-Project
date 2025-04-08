@@ -67,7 +67,7 @@ def getRepresentation(cube: Cube) -> str:
 def solve(cube: Cube) -> str:
     '''Using the two-phase algorithm to solve the cube.'''
     representation = getRepresentation(cube)
-    solution = sv.solve(representation, 20, 5)
+    solution = sv.solve(representation, 20, 2)
     return solution
 
 

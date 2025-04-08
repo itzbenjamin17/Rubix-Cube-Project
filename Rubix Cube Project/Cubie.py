@@ -2,6 +2,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from Face import Face
 import numpy as np
+from typing import List, Dict, Tuple, Any, Union
 
 vertices = (
     (1, -1, -1),
@@ -46,7 +47,7 @@ class Cubie:
         self.faces = self.assignFaces(colours)
         self.face_mapping = self.faces
 
-    def setVertices(self):
+    def setVertices(self) -> List[Tuple[float, float, float]]:
         '''Setting predefined vertices based on cubie's position'''
         newVertices = []
         for vert in vertices:
@@ -56,7 +57,7 @@ class Cubie:
             newVertices.append((newX, newY, newZ))
         return newVertices
 
-    def rotateVertices(self, rotationMatrix: np.array):
+    def rotateVertices(self, rotationMatrix: np.array) -> None:
         '''Rotatating the vertices of the cubie using the given rotation matrix'''
         newVertices = []
         for vert in self.vertices:
@@ -64,7 +65,7 @@ class Cubie:
             newVertices.append(rotatedVertex)
         self.vertices = newVertices
 
-    def assignFaces(self, colours: dict):
+    def assignFaces(self, colours: dict) -> Dict[int, Face]:
         '''Assigning the correct colours to each face of the cubie'''
         faces = {}
         faceOrder = ["B", "L", "F", "R", "U", "D"]
@@ -76,7 +77,7 @@ class Cubie:
                 faces[i] = Face((0, 0, 0), faceOrder[i])
         return faces
 
-    def rotateFaces(self, axis: str, angle: float):
+    def rotateFaces(self, axis: str, angle: float) -> None:
         '''Rotating the faces of the cubie based on the given axis and angle and updating the face mapping for solving'''
         # Some axes dont work how i would imagine so face mappings have to be swapped
         newFaces = {}
@@ -108,7 +109,7 @@ class Cubie:
 
         self.face_mapping = newFaces
 
-    def moveFaces(self, faceMapping: dict):
+    def moveFaces(self, faceMapping: dict) -> Dict[int, Face]:
         # Convoluted way to use the face mapping dictionary to place the right face at each index
         newFaces = {}
         for i, face in self.face_mapping.items():
@@ -120,7 +121,7 @@ class Cubie:
                 newFaces[i] = self.face_mapping[i]
         return newFaces
 
-    def createCubie(self):
+    def createCubie(self) -> None:
         '''Open GL syntax to create a single cubie'''
         glBegin(GL_QUADS)
         for i, surface in enumerate(surfaces):
@@ -129,7 +130,7 @@ class Cubie:
                 glVertex3fv(self.vertices[vertex])
         glEnd()
 
-    def updateCoordinates(self, x: int, y: int, z: int):
+    def updateCoordinates(self, x: int, y: int, z: int) -> None:
         self.x = x
         self.y = y
         self.z = z

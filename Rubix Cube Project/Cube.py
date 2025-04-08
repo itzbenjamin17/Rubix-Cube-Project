@@ -5,6 +5,7 @@ from Edge import Edge
 from Centre import Centre
 from OpenGL.GL import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 import pygame
+from typing import Dict, List, Tuple, Any
 
 ANIMATION_DIVISION = 9
 FRAME_RATE = 100
@@ -31,7 +32,7 @@ class Cube:
         self.centres = []
         self.clock = pygame.time.Clock()
 
-    def createEntireCube(self):
+    def createEntireCube(self) -> None:
         '''Creating the entire cube structure'''
         for x in range(self.typeOfCube):
             for y in range(self.typeOfCube):
@@ -54,7 +55,7 @@ class Cube:
                             self.centres.append(cubie)
                         self.cubeDict[(x, y, z)] = cubie
 
-    def assignColours(self, x: int, y: int, z: int):
+    def assignColours(self, x: int, y: int, z: int) -> Dict[str, Tuple[float, float, float]]:
         '''Assigning the correct colours to each face of the cubie based on its position'''
         colours = {}
         if y == self.typeOfCube - 1:  # Top face
@@ -71,12 +72,12 @@ class Cube:
             colours['R'] = FACE_COLOURS['R']
         return colours
 
-    def render(self):
+    def render(self) -> None:
         '''Rendering the entire cube/rendering each cubie'''
         for cubie in self.cubeDict.values():
             cubie.createCubie()
 
-    def rotateFace(self, layer: int, axis: str, angle: float):
+    def rotateFace(self, layer: int, axis: str, angle: float) -> None:
         '''Rotating a face of the cube based on the given axis and angle'''
         if axis == "x":
             dimension = 0
@@ -128,7 +129,7 @@ class Cube:
 
             self.cubeDict[(newX, newY, newZ)] = cubie
 
-    def leftMove(self, angle: float):
+    def leftMove(self, angle: float) -> None:
         global turns
         for _ in range(ANIMATION_DIVISION):
             turns += 1
@@ -140,7 +141,7 @@ class Cube:
 
         turns = 0
 
-    def rightMove(self, angle: float):
+    def rightMove(self, angle: float) -> None:
         global turns
         for _ in range(ANIMATION_DIVISION):
             turns += 1
@@ -152,7 +153,7 @@ class Cube:
 
         turns = 0
 
-    def upMove(self, angle: float):
+    def upMove(self, angle: float) -> None:
         global turns
         for _ in range(ANIMATION_DIVISION):
             turns += 1
@@ -164,7 +165,7 @@ class Cube:
 
         turns = 0
 
-    def downMove(self, angle: float):
+    def downMove(self, angle: float) -> None:
         global turns
         for _ in range(ANIMATION_DIVISION):
             turns += 1
@@ -176,7 +177,7 @@ class Cube:
 
         turns = 0
 
-    def backMove(self, angle: float):
+    def backMove(self, angle: float) -> None:
         global turns
         for _ in range(ANIMATION_DIVISION):
             turns += 1
@@ -188,7 +189,7 @@ class Cube:
 
         turns = 0
 
-    def frontMove(self, angle: float):
+    def frontMove(self, angle: float) -> None:
         global turns
         for _ in range(ANIMATION_DIVISION):
             turns += 1

@@ -13,7 +13,7 @@ ANTICLOCKWISE_TURN_ANGLE = -pi/2
 FPS = 60  # Target frames per second
 
 
-def print_keybind_menu():
+def print_keybind_menu() -> None:
     """Prints a formatted menu of keybinds in the console"""
     print("\n" + "="*50)
     print("{:^50}".format("RUBIK'S CUBE SIMULATOR - KEYBINDS"))
@@ -43,7 +43,8 @@ def print_keybind_menu():
     # Other controls
     print("\n{:^50}".format("OTHER CONTROLS"))
     print("-"*50)
-    print("{:<30} : {}".format("Space", "Print move history"))
+    print("{:<30} : {}".format(
+        "Space", "Print move history (Resets after solving)"))
     print("{:<30} : {}".format("`", "Auto-solve cube"))
 
 
