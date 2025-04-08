@@ -1,9 +1,10 @@
 import twophase.solver as sv
 from Cube import Cube
 from math import pi
-import time
+import pygame
 
 TURN = pi / 2
+MOVE_DELAY = 2  # Frames per second for the solution animation
 
 
 def getRepresentation(cube: Cube) -> str:
@@ -74,32 +75,40 @@ def executeSolve(cube: Cube, solution: str) -> None:
     '''Executing the solution on the cube.'''
     # Split the solution into individual moves
     moves = solution.split()
+    clock = pygame.time.Clock()
 
     # Execute each move on the cube
     for move in moves:
-        turns = int(move[1])
-        if move[0] == 'U':
-            for _ in range(turns):
-                cube.upMove(TURN)
-                time.sleep(0.5)
-            cube.upMove(90)
-        elif move[0] == 'D':
-            for _ in range(turns):
+        if len(move) > 1 and move[1].isdigit():
+            turns = int(move[1])
+        else:
+            # Handle moves like U' or just U
+            if "'" in move:
+                turns = 3  # 3 clockwise = 1 counterclockwise
+            else:
+                turns = 1
+
+        move_type = move[0]
+
+        for _ in range(turns):
+            if move_type == 'U':
+                cube.upMove(-TURN)
+            elif move_type == 'D':
                 cube.downMove(TURN)
-                time.sleep(0.5)
-        elif move[0] == 'L':
-            for _ in range(turns):
+            elif move_type == 'L':
                 cube.leftMove(TURN)
-                time.sleep(0.5)
-        elif move[0] == 'R':
-            for _ in range(turns):
-                cube.rightMove(TURN)
-                time.sleep(0.5)
-        elif move[0] == 'F':
-            for _ in range(turns):
-                cube.frontMove(TURN)
-                time.sleep(0.5)
-        elif move[0] == 'B':
-            for _ in range(turns):
+            elif move_type == 'R':
+                cube.rightMove(-TURN)
+            elif move_type == 'F':
+                cube.frontMove(-TURN)
+            elif move_type == 'B':
                 cube.backMove(TURN)
-                time.sleep(0.5)
+
+            # Handle events to prevent freezing
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+            # Control animation speed
+            clock.tick(MOVE_DELAY)

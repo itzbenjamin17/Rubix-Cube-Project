@@ -3,12 +3,11 @@ from math import sin, cos
 from Corner import Corner
 from Edge import Edge
 from Centre import Centre
-from time import sleep
 from OpenGL.GL import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 import pygame
 
 ANIMATION_DIVISION = 9
-TIME_WAIT = 0.005
+FRAME_RATE = 100  # Higher value = faster animation
 
 FACE_COLOURS = {
     'U': (1, 1, 1),  # White
@@ -30,6 +29,7 @@ class Cube:
         self.corners = []
         self.edges = []
         self.centres = []
+        self.clock = pygame.time.Clock()
 
     def createEntireCube(self):
         '''Creating the entire cube structure'''
@@ -136,7 +136,7 @@ class Cube:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
-            sleep(TIME_WAIT)
+            self.clock.tick(FRAME_RATE)
 
         turns = 0
 
@@ -148,7 +148,7 @@ class Cube:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
-            sleep(TIME_WAIT)
+            self.clock.tick(FRAME_RATE)
 
         turns = 0
 
@@ -160,7 +160,7 @@ class Cube:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
-            sleep(TIME_WAIT)
+            self.clock.tick(FRAME_RATE)
 
         turns = 0
 
@@ -172,7 +172,7 @@ class Cube:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
-            sleep(TIME_WAIT)
+            self.clock.tick(FRAME_RATE)
 
         turns = 0
 
@@ -184,7 +184,7 @@ class Cube:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
-            sleep(TIME_WAIT)
+            self.clock.tick(FRAME_RATE)
 
         turns = 0
 
@@ -196,6 +196,6 @@ class Cube:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             self.render()
             pygame.display.flip()
-            sleep(TIME_WAIT)
+            self.clock.tick(FRAME_RATE)
 
         turns = 0
